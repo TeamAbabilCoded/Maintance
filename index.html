@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maintenance Mode</title>
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #0d0d0d;
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px #ffcc00;
+    }
+    .countdown {
+      font-size: 1.8rem;
+      margin-top: 1rem;
+      color: #ffcc00;
+    }
+    .lottie-box {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0; left: 0;
+      pointer-events: none;
+    }
+    .lottie {
+      position: absolute;
+    }
+    #gear {
+      width: 200px;
+      bottom: 10%;
+      left: 10%;
+    }
+    #smoke {
+      width: 300px;
+      top: 10%;
+      right: 10%;
+    }
+    #sparks {
+      width: 200px;
+      bottom: 20%;
+      right: 15%;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔧 Kami Sedang Maintenance</h1>
+  <p>Situs akan kembali aktif dalam:</p>
+  <div class="countdown" id="countdown">00:59:59</div>
+
+  <div class="lottie-box">
+    <div class="lottie" id="gear"></div>
+    <div class="lottie" id="smoke"></div>
+    <div class="lottie" id="sparks"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
+  <script>
+    // Countdown Logic
+    const countdownEl = document.getElementById("countdown");
+    const target = new Date().getTime() + (60 * 60 * 1000); // 1 hour from now
+
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const diff = target - now;
+
+      const hrs = String(Math.floor((diff / (1000 * 60 * 60)))).padStart(2, '0');
+      const mins = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+      const secs = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
+
+      countdownEl.textContent = `${hrs}:${mins}:${secs}`;
+      if (diff <= 0) countdownEl.textContent = "00:00:00";
+    };
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // Lottie Load
+    const loadLottie = (id, path) => {
+      lottie.loadAnimation({
+        container: document.getElementById(id),
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: path
+      });
+    };
+
+    loadLottie('gear', 'lottie/gear.json');
+    loadLottie('smoke', 'lottie/smoke.json');
+    loadLottie('sparks', 'lottie/sparks.json');
+  </script>
+</body>
+</html>
