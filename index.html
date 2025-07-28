@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Maintenance</title>
   <style>
     * {
@@ -10,92 +10,112 @@
       padding: 0;
       box-sizing: border-box;
     }
-    body {
-      background-color: #0e0e0e;
+    html, body {
+      background-color: #0f0f0f;
       color: #fff;
       font-family: 'Segoe UI', sans-serif;
-      height: 100vh;
+      height: 100%;
       overflow: hidden;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
+      flex-direction: column;
       text-align: center;
     }
-    #gear, #smoke, #sparks {
+    .animation-container {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin-bottom: 20px;
+    }
+    .gear, .smoke, .sparks {
       position: absolute;
-      z-index: 1;
+      left: 50%;
+      transform: translateX(-50%);
     }
-    #gear {
-      width: 160px;
-      top: 10%;
+    .gear {
       z-index: 3;
+      top: 0;
+      width: 200px;
     }
-    #smoke {
-      width: 220px;
-      top: 5%;
-      opacity: 0.3;
-      z-index: 2;
+    .smoke {
+      z-index: 1;
+      top: 10px;
+      width: 250px;
+      opacity: 0.7;
     }
-    #sparks {
-      width: 180px;
-      bottom: 20%;
+    .sparks {
       z-index: 2;
+      top: 160px;
+      width: 120px;
     }
     h1 {
-      z-index: 4;
-      font-size: 2.2rem;
-      margin-top: 120px;
+      font-size: 1.6rem;
+      margin-bottom: 10px;
     }
-    p {
-      font-size: 1.1rem;
-      margin-top: 10px;
-      color: #aaa;
+    #countdown {
+      font-size: 1.2rem;
+      color: #f0c040;
     }
   </style>
 </head>
 <body>
-
-  <!-- Animasi Gear -->
-  <div id="gear"></div>
-
-  <!-- Animasi Smoke -->
-  <div id="smoke"></div>
-
-  <!-- Teks Utama -->
+  <div class="animation-container">
+    <div class="smoke" id="smoke"></div>
+    <div class="gear" id="gear"></div>
+    <div class="sparks" id="sparks"></div>
+  </div>
   <h1>🔧 Kami Sedang Maintenance</h1>
-  <p>Sedang kami tingkatkan sistem. Silakan kembali beberapa saat lagi.</p>
+  <div id="countdown">00:00:00</div>
 
-  <!-- Sparks di bawah -->
-  <div id="sparks"></div>
-
-  <!-- Script Lottie -->
-  <script src="https://unpkg.com/lottie-web@5.7.13/build/player/lottie.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
   <script>
+    // Gear
     lottie.loadAnimation({
-      container: document.getElementById('gear'),
-      renderer: 'svg',
+      container: document.getElementById("gear"),
+      renderer: "svg",
       loop: true,
       autoplay: true,
-      path: 'lottie/gear.json'
+      path: "lottie/gear.json"
     });
 
+    // Smoke
     lottie.loadAnimation({
-      container: document.getElementById('smoke'),
-      renderer: 'svg',
+      container: document.getElementById("smoke"),
+      renderer: "svg",
       loop: true,
       autoplay: true,
-      path: 'lottie/smoke.json'
+      path: "lottie/smoke.json"
     });
 
+    // Sparks
     lottie.loadAnimation({
-      container: document.getElementById('sparks'),
-      renderer: 'svg',
+      container: document.getElementById("sparks"),
+      renderer: "svg",
       loop: true,
       autoplay: true,
-      path: 'lottie/sparks.json'
+      path: "lottie/sparks.json"
     });
+
+    // Countdown
+    const countdown = document.getElementById("countdown");
+    const maintenanceEnd = new Date().getTime() + 2 * 60 * 60 * 1000; // 2 jam dari sekarang
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = maintenanceEnd - now;
+      if (distance <= 0) {
+        countdown.innerText = "Situs kembali aktif!";
+        return;
+      }
+      const hours = Math.floor(distance / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      countdown.innerText = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
   </script>
-
 </body>
 </html>
