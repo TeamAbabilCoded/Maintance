@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Maintenance</title>
   <style>
     * {
@@ -10,96 +10,112 @@
       padding: 0;
       box-sizing: border-box;
     }
-    body {
-      background-color: #111;
+    html, body {
+      background-color: #0f0f0f;
       color: #fff;
       font-family: 'Segoe UI', sans-serif;
+      height: 100%;
+      overflow: hidden;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      overflow: hidden;
-    }
-    .lottie {
-      position: absolute;
-      pointer-events: none;
-    }
-    #gear {
-      width: 200px;
-      z-index: 3;
-    }
-    #smoke {
-      width: 250px;
-      z-index: 2;
-      top: 80px;
-    }
-    #sparks {
-      width: 180px;
-      z-index: 1;
-      top: 250px;
-    }
-    .title {
-      margin-top: 300px;
-      font-size: 28px;
-      font-weight: bold;
+      flex-direction: column;
       text-align: center;
-      opacity: 0;
-      animation: fadeIn 1s ease-in-out forwards;
-      animation-delay: 1s;
     }
-    .countdown {
-      margin-top: 10px;
-      font-size: 20px;
-      color: #ccc;
+    .animation-container {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin-bottom: 20px;
     }
-    @keyframes fadeIn {
-      to { opacity: 1; }
+    .gear, .smoke, .sparks {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .gear {
+      z-index: 3;
+      top: 0;
+      width: 200px;
+    }
+    .smoke {
+      z-index: 1;
+      top: 10px;
+      width: 250px;
+      opacity: 0.7;
+    }
+    .sparks {
+      z-index: 2;
+      top: 160px;
+      width: 120px;
+    }
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+    }
+    #countdown {
+      font-size: 1.2rem;
+      color: #f0c040;
     }
   </style>
 </head>
 <body>
-  <!-- Lottie -->
-  <div id="gear" class="lottie"></div>
-  <div id="smoke" class="lottie"></div>
-  <div id="sparks" class="lottie"></div>
+  <div class="animation-container">
+    <div class="smoke" id="smoke"></div>
+    <div class="gear" id="gear"></div>
+    <div class="sparks" id="sparks"></div>
+  </div>
+  <h1>🔧 Kami Sedang Maintenance</h1>
+  <div id="countdown">00:00:00</div>
 
-  <!-- Teks -->
-  <div class="title">🔧 Kami Sedang Maintenance</div>
-  <div class="countdown">Kembali online dalam <span id="timer">00:00</span></div>
-
-  <!-- Lottie Script -->
-  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
   <script>
-    const gear = document.getElementById("gear");
-    const smoke = document.getElementById("smoke");
-    const sparks = document.getElementById("sparks");
+    // Gear
+    lottie.loadAnimation({
+      container: document.getElementById("gear"),
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      path: "lottie/gear.json"
+    });
 
-    gear.innerHTML = `
-      <lottie-player src="lottie/gear.json" background="transparent" speed="1" loop autoplay></lottie-player>
-    `;
-    smoke.innerHTML = `
-      <lottie-player src="lottie/smoke.json" background="transparent" speed="1" loop autoplay></lottie-player>
-    `;
-    sparks.innerHTML = `
-      <lottie-player src="lottie/sparks.json" background="transparent" speed="1" loop autoplay></lottie-player>
-    `;
+    // Smoke
+    lottie.loadAnimation({
+      container: document.getElementById("smoke"),
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      path: "lottie/smoke.json"
+    });
 
-    // Countdown Timer
-    let seconds = 3600; // 1 jam
-    const timerEl = document.getElementById("timer");
-    const formatTime = (s) => {
-      const m = String(Math.floor(s / 60)).padStart(2, '0');
-      const sc = String(s % 60).padStart(2, '0');
-      return `${m}:${sc}`;
-    };
-    timerEl.textContent = formatTime(seconds);
-    setInterval(() => {
-      if (seconds > 0) {
-        seconds--;
-        timerEl.textContent = formatTime(seconds);
+    // Sparks
+    lottie.loadAnimation({
+      container: document.getElementById("sparks"),
+      renderer: "svg",
+      loop: true,
+      autoplay: true,
+      path: "lottie/sparks.json"
+    });
+
+    // Countdown
+    const countdown = document.getElementById("countdown");
+    const maintenanceEnd = new Date().getTime() + 2 * 60 * 60 * 1000; // 2 jam dari sekarang
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = maintenanceEnd - now;
+      if (distance <= 0) {
+        countdown.innerText = "Situs kembali aktif!";
+        return;
       }
-    }, 1000);
+      const hours = Math.floor(distance / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      countdown.innerText = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
   </script>
 </body>
 </html>
